@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>PJ Vaalit</h1>
+  
+  <p>Näissä vaaleissa valitaan uusi puheenjohtaja</p>
+
+  <table class="table table-striped table-bordered">
+    <thead>
+      <tr>
+        <th>Ehdokas</th>
+        <th>Ääniä</th>
+        <th>Äänestä</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>Seppo</td>
+        <td>2</td>
+        <td><label class="label label-success">Äänestä</label></td>
+      </tr>
+      <tr>
+        <td>Jyrki</td>
+        <td>2</td>
+        <td><label class="label label-success">X</label></td>
+      </tr>
+    </tbody>
+  </table>
+{% endblock %}
