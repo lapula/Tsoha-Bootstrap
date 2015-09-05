@@ -3,7 +3,7 @@
 Yleisiä linkkejä:
 
 * [Linkki sovellukseeni](http://lapula.users.cs.helsinki.fi/aanestys/)
-* [Linkki dokumentaatiooni](https://www.github.com)
+* [Linkki dokumentaatiooni](https://github.com/lapula/Tsoha-Bootstrap/blob/master/doc/Tikaha.pdf)
 
 ## Työn aihe
 
