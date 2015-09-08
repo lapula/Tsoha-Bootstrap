@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Omat äänestykset</h1>
+
+   <p>
+    <a href="{{base_path}}/luo" class="btn btn-success">Aloita uusi äänestys</a>
+   </p>
+  <table class="table table-striped table-bordered">
+    <thead>
+      <tr>
+        <th>Aihe</th>
+        <th>Päättyy</th>
+        <th>Kirjautuminen vaadittu</th>
+        <th>Muokkaa</th>
+        <th>Poista</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for aanestys in aanestykset %}
+        <tr>
+            <td><a href="{{base_path}}/tiedot/{{aanestys.id}}">{{aanestys.nimi}}</a></td>
+            <td>{{aanestys.paattyy}}</td>
+            <td>
+                {% if aanestys.kirjautuminen %}
+                  <label class="label label-success">Kyllä</label>
+                {% else %}
+                  <label class="label label-danger">Ei</label>
+                {% endif %}
+            </td>
+            <td><a href="{{base_path}}/muokkaa/{{aanestys.id}}" class="btn btn-warning">Muokkaa</a></td>
+            <td><a href="{{base_path}}/poista/{{aanestys.id}}" class="btn btn-danger">Poista</a></td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
+

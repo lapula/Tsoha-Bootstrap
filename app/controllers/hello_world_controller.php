@@ -1,19 +1,26 @@
 <?php
-
+    
+  //require 'app/models/Aanestys.php';
   class HelloWorldController extends BaseController{
 
-    public static function index(){
-      // make-metodi renderöi app/views-kansiossa sijaitsevia tiedostoja
-   	  echo 'Tämä on etusivu!';
-    }
+    //public static function index(){}
 
     public static function sandbox(){
-      View::make('helloworld.html');
+        //View::make('helloworld.html');
+        $tiedot = Aanestys::haeYksi('1');
+        $aanestykset = Aanestys::haeKaikki();
+        $ehdokkaat = Ehdokkaat::haeKaikkiEhdokkaat('1');
+        $aanestykset = Kayttaja::omatAanestykset('1');
+        // Kint-luokan dump-metodi tulostaa muuttujan arvon
+        Kint::dump($tiedot);
+        Kint::dump($aanestykset);
+        Kint::dump($ehdokkaat);
+        Kint::dump($aanestykset);
     }
     
-    public static function kaikki(){
+    /*public static function kaikki(){
       View::make('kaikki.html');
-    }
+    }*/
     
     public static function tiedot(){
       View::make('tiedot.html');
@@ -27,12 +34,6 @@
       View::make('luo.html');
     }
     
-    public static function kirjaudu(){
-      View::make('/kayttaja/kirjaudu.html');
-    }
     
-    public static function uusikayttaja(){
-      View::make('/kayttaja/uusikayttaja.html');
-    }
     
   }

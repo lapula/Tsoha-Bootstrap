@@ -1,26 +1,92 @@
 {% extends "base.html" %}
 {% block content %}
-  <h1>Kaikki käynnissä olevat äänestykset</h1>
+<h1>Kaikki äänestykset</h1>
+<p><i><font color="red">{{viesti}}</font></i></p>
 
-  <p>
-    <a href="#" class="btn btn-success">Aloita uusi äänestys</a>
-  </p>
 
+<h3>Käynnissä olevat äänestykset</h3>
+   <p>
+    <a href="{{base_path}}/luo" class="btn btn-success">Aloita uusi äänestys</a>
+   </p>
   <table class="table table-striped table-bordered">
     <thead>
       <tr>
         <th>Aihe</th>
         <th>Päättyy</th>
         <th>Kirjautuminen vaadittu</th>
+        {% if kayttaja %}
+        <th>Muokkaa</th>
+        <th>Poista</th>
+        {% endif %}
       </tr>
     </thead>
 
     <tbody>
-      <tr>
-        <td><a href="#">PJ Vaalit</a></td>
-        <td>12.12.2015</td>
-        <td><label class="label label-info">Ei</label></td>
-      </tr>
+      {% for aanestys in aanestykset %}
+        {% if date(aanestys.paattyy) >= date() %}
+        <tr>
+            <td><a href="{{base_path}}/tiedot/{{aanestys.id}}">{{aanestys.nimi}}</a></td>
+            <td>{{aanestys.paattyy}}</td>
+            <td>
+                {% if aanestys.kirjautuminen %}
+                  <label class="label label-success">Kyllä</label>
+                {% else %}
+                  <label class="label label-danger">Ei</label>
+                {% endif %}
+            </td>
+            {% if kayttaja.id == aanestys.luonut %}
+            <td><a href="{{base_path}}/muokkaa/{{aanestys.id}}" class="btn btn-warning">Muokkaa</a></td>
+            <td><a href="{{base_path}}/poista/{{aanestys.id}}" class="btn btn-danger">Poista</a></td>
+            {% elseif kayttaja%}
+            <td><label class="btn btn-block"></label></td>
+            <td><label class="btn btn-block"></label></td>
+            {% endif %}
+        </tr>
+        {% endif %}
+      {% endfor %}
     </tbody>
   </table>
+
+<h3>Päättyneet äänestykset</h3><br>
+  
+
+<table class="table table-striped table-bordered">
+    <thead>
+      <tr>
+        <th>Aihe</th>
+        <th>Päättyy</th>
+        <th>Kirjautuminen vaadittu</th>
+        {% if kayttaja %}
+        <th>Muokkaa</th>
+        <th>Poista</th>
+        {% endif %}
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for aanestys in aanestykset %}
+        {% if date(aanestys.paattyy) < date() %}
+        <tr>
+            <td><a href="{{base_path}}/tiedot/{{aanestys.id}}">{{aanestys.nimi}}</a></td>
+            <td>{{aanestys.paattyy}}</td>
+            <td>
+                {% if aanestys.kirjautuminen %}
+                  <label class="label label-success">Kyllä</label>
+                {% else %}
+                  <label class="label label-danger">Ei</label>
+                {% endif %}
+            </td>
+            {% if kayttaja.id == aanestys.luonut %}
+            <td><a href="{{base_path}}/muokkaa/{{aanestys.id}}" class="btn btn-warning">Muokkaa</a></td>
+            <td><a href="{{base_path}}/poista/{{aanestys.id}}" class="btn btn-danger">Poista</a></td>
+            {% elseif kayttaja%}
+            <td><label class="btn btn-block"></label></td>
+            <td><label class="btn btn-block"></label></td>
+            {% endif %}
+        </tr>
+        {% endif %}
+      {% endfor %}
+    </tbody>
+  </table>
+  
 {% endblock %}

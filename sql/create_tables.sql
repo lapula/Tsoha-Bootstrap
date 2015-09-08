@@ -7,6 +7,9 @@ CREATE TABLE Kayttaja (
 
 CREATE TABLE Aanestys (
     id SERIAL PRIMARY KEY,
+    luonut INTEGER REFERENCES Kayttaja(id),
+    nimi varchar(40) NOT NULL,
+    kuvaus varchar(400) NOT NULL,
     paattyy DATE,
     kirjautuminen boolean DEFAULT true
 );
@@ -19,6 +22,7 @@ CREATE TABLE Ehdokas (
 );
 
 CREATE TABLE Aanestaneet (
-    kayttaja_id INTEGER PRIMARY KEY, 
-    aanestys_id INTEGER REFERENCES Aanestys(id)
+    kayttaja_id INTEGER REFERENCES Kayttaja(id),
+    aanestys_id INTEGER REFERENCES Aanestys(id),
+    ehdokas_id INTEGER REFERENCES Ehdokas(id)
 );

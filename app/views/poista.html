@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>Varoitus!</h1>
+  
+  <p>Olet poistamassa äänestystä {{aanestys.nimi}},
+      oletko varma että haluat poistaa äänestyksen
+      (ja siihen liittyvät ehdokkaat)?</p>
+
+
+  <form method="post" action="{{base_path}}/poista/{{aanestys.id}}">
+    <button type="submit" class="btn btn-danger">Kyllä</button>
+  </form>
+  <form method="get" action="{{base_path}}/kaikki">
+    <button type="submit" class="btn btn-success">En</button>
+  </form>
+{% endblock %}
+

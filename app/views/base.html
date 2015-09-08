@@ -40,10 +40,16 @@
           <ul class="nav navbar-nav">
             <!-- Navigaation linkit -->
             <li><a href="{{base_path}}">Etusivu</a></li>
-            <li><a href="{{base_path}}/luo">Uusi Äänestys</a></li>
+            <li><a href="{{base_path}}/kayttaja/kaikki">Rekisteröityneet käyttäjät</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">Kirjaudu sisään</a></li>
+            {% if kayttaja %}
+              <li><a href="{{base_path}}/kayttaja/omataanestykset/{{kayttaja.id}}">Omat äänestykset</a></li>
+              <li><a href="{{base_path}}/kayttaja/muokkaa/{{kayttaja.id}}">Hallinnoi tiliäsi</a></li>
+              <li><a href="{{base_path}}/kayttaja/kirjauduUlos">Kirjaudu ulos</a></li>
+            {% else %}
+              <li><a href="{{base_path}}/kayttaja/kirjaudu">Kirjaudu sisään</a></li>
+            {% endif %}
           </ul>
         </div>
       </div>
