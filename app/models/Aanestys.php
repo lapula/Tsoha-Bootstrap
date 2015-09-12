@@ -6,10 +6,11 @@ class Aanestys extends BaseModel{
     
     public function __construct($attributes) {
         parent::__construct($attributes);
+        $this->validointi = array('validoiKuvaus', 'validoiPaattyy', 'validoiNimi');
     }
     
     public static function haeKaikki() {
-        $query = DB::connection()->prepare('SELECT * FROM aanestys');
+        $query = DB::connection()->prepare('SELECT * FROM aanestys ORDER BY aanestys.paattyy ASC');
         
         $query->execute();
         $rivit = $query->fetchAll();
@@ -43,7 +44,7 @@ class Aanestys extends BaseModel{
                'luonut' => $rivi['luonut'],
                'nimi' => $rivi['nimi'],
                'kuvaus' => $rivi['kuvaus'],
-               'paattyy' => $rivi['paattyy'],
+               'paattyy' => date('d.m.Y', strtotime($rivi['paattyy'])),
                'kirjautuminen' => $rivi['kirjautuminen'],
                'ehdokkaat' => Ehdokkaat::haeKaikkiEhdokkaat($id)
             ));
@@ -83,6 +84,67 @@ class Aanestys extends BaseModel{
         $query->execute(array('id' => $id));
         
         
+    }
+    
+    public static function tarkistaOikeudet($id, $kayttaja){
+      
+        $query = DB::connection()->prepare('SELECT luonut FROM aanestys WHERE aanestys.id = :id LIMIT 1');
+        
+        $query->execute(array('id' => $id));
+        $rivi = $query->fetch();
+        
+        if ($rivi[0] == $kayttaja) {
+            return true;
+        }
+        
+        return false;
+        
+    }
+    
+    //VALIDOINTI
+    
+    public function validoiNimi() {
+        $nimi = $this->nimi;
+        $virheet = parent::validoi_string_pituus($nimi, 3, 40, 'Nimen');
+        
+        $query = DB::connection()->prepare('SELECT id, nimi FROM aanestys WHERE nimi = :nimi LIMIT 1');
+        
+        $query->execute(array('nimi' => $nimi));
+        $rivi = $query->fetch();
+        
+        if ($rivi['nimi'] == $nimi && $rivi['id'] != $this->id) {
+            $virheet[] = 'Sen niminen äänestys on jo olemassa!';
+        }
+        
+        return $virheet;
+    }
+    
+    public function validoiKuvaus() {
+        $kuvaus = $this->kuvaus;
+        $virheet = parent::validoi_string_pituus($kuvaus, 5, 400, 'Kuvauksen');
+        return $virheet;
+    }
+    
+    public function validoiPaattyy() {
+        $paattyy = $this->paattyy;
+        $virheet = array();
+        
+        $osat = explode(".", $paattyy);
+        
+        if ((count($osat) == 3)) {
+            if (!checkdate($osat[1], $osat[0], $osat[2])) {
+                $virheet[] = 'Syötä oikeanmuotoinen päivämäärä! (pp.kk.vvvv)';
+                return $virheet;
+            }
+        } else {
+            $virheet[] = 'Syötä oikeanmuotoinen päivämäärä! (pp.kk.vvvv)';
+            return $virheet;
+        }
+        
+        if (strtotime(date('d.m.y')) > strtotime($paattyy)) {
+            $virheet[] = 'Päättymispäivä ei saa olla menneisyydessä (eikä nykyinen päivä)!';
+        }
+        return $virheet;
     }
     
     

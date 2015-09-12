@@ -19,5 +19,7 @@
           Redirect::to('/kayttaja/kirjaudu', array('virhe' => 'Kirjaudu ensin sisään!'));
       }
     }
+    
+    
 
   }

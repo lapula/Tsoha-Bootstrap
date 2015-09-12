@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>{{kayttaja.nimi}}:n aktiviteetti</h1>
+<p><i><font color="red">{{viesti}}</font></i></p>
+
+
+  <table class="table table-striped table-bordered">
+    <thead>
+      <tr>
+        <th>Äänestys</th>
+        <th>Ehdokas</th>
+        <th>Ääniä</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for a in aktiviteetti %}
+      <tr>
+          <td><a href="{{base_path}}/tiedot/{{a.aanestys_id}}">{{a.aanestys_nimi}}</a></td>
+          <td>{{a.ehdokas_nimi}}</td>
+          <td>{{a.ehdokas_aanet}}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+
+{% endblock %}

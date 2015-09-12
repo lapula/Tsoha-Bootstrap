@@ -14,10 +14,12 @@
         <th>Aihe</th>
         <th>Päättyy</th>
         <th>Kirjautuminen vaadittu</th>
+        <!---
         {% if kayttaja %}
         <th>Muokkaa</th>
         <th>Poista</th>
         {% endif %}
+        --->
       </tr>
     </thead>
 
@@ -34,6 +36,7 @@
                   <label class="label label-danger">Ei</label>
                 {% endif %}
             </td>
+            <!---
             {% if kayttaja.id == aanestys.luonut %}
             <td><a href="{{base_path}}/muokkaa/{{aanestys.id}}" class="btn btn-warning">Muokkaa</a></td>
             <td><a href="{{base_path}}/poista/{{aanestys.id}}" class="btn btn-danger">Poista</a></td>
@@ -41,6 +44,7 @@
             <td><label class="btn btn-block"></label></td>
             <td><label class="btn btn-block"></label></td>
             {% endif %}
+            --->
         </tr>
         {% endif %}
       {% endfor %}
@@ -56,10 +60,12 @@
         <th>Aihe</th>
         <th>Päättyy</th>
         <th>Kirjautuminen vaadittu</th>
+        <!---
         {% if kayttaja %}
         <th>Muokkaa</th>
         <th>Poista</th>
         {% endif %}
+        --->
       </tr>
     </thead>
 
@@ -76,6 +82,7 @@
                   <label class="label label-danger">Ei</label>
                 {% endif %}
             </td>
+            <!---
             {% if kayttaja.id == aanestys.luonut %}
             <td><a href="{{base_path}}/muokkaa/{{aanestys.id}}" class="btn btn-warning">Muokkaa</a></td>
             <td><a href="{{base_path}}/poista/{{aanestys.id}}" class="btn btn-danger">Poista</a></td>
@@ -83,6 +90,7 @@
             <td><label class="btn btn-block"></label></td>
             <td><label class="btn btn-block"></label></td>
             {% endif %}
+--->
         </tr>
         {% endif %}
       {% endfor %}

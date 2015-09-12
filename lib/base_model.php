@@ -15,11 +15,15 @@
       }
     }
     
-    public function validoi_string_pituus($string, $min, $minka) {
+    public function validoi_string_pituus($string, $min, $max, $minka) {
         $virheet = array();
         $pituus = strlen($string);
         if ($pituus < $min) {
-            $virheet[] = $minka . ' pitää olla vähintään ' . $min . ' merkkiä pitkä';
+            $virheet[] = $minka . ' pitää olla vähintään ' . $min . ' merkkiä pitkä!';
+        } 
+        
+        if ($pituus > $max) {
+            $virheet[] = $minka . ' pitää olla enintään ' . $max . ' merkkiä pitkä!';
         } 
         
         return $virheet;

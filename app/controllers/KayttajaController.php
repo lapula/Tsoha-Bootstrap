@@ -30,6 +30,13 @@ class KayttajaController extends BaseController {
         
         $virheet = $kayttaja->errors();
         
+        if ($params['salasana2'] != $params['salasana']) {
+            $virheet[] = 'Salasanat eivät täsmää!';
+        }
+        if ($params['kontrolli'] != '1221') {
+            $virheet[] = 'Kontrollin arvo on väärin!';
+        }
+        
         if (count($virheet) == 0) {
             $kayttaja->tallenna();
             Redirect::to('/kayttaja/kirjaudu', array('virhe' => 'Käyttäjä luotu! Kirjaudu sisään :)'));
@@ -73,33 +80,30 @@ class KayttajaController extends BaseController {
       View::make('/kayttaja/muokkaa.html', array('kayttaja' => $kayttaja));
     }
     
-    public static function muokkaa($id){
+    public static function muokkaa(){
       $params = $_POST;
       $kayttaja = self::onKirjautunut();
         
         $attributes = array(
-            'id' => $id,
+            'id' => $kayttaja->id,
             'nimi' => $params['nimi'],
             'salasana' => $params['salasana'],           
         );
         
         $muokattukayttaja = new Kayttaja($attributes);
-        
         $virheet = $muokattukayttaja->errors();
         
-        if (count($virheet) == 0 || 
-                (count($virheet) == 1 && $virheet[0] ==  'Nimi on jo käytössä!'
-                 && $params['nimi'] == $kayttaja->nimi)) {
-            $muokattukayttaja->muokkaa($id);
+        if (count($virheet) == 0) {
+            $muokattukayttaja->muokkaa($kayttaja->id);
             Redirect::to('/', array('viesti' => 'Käyttäjätiedot muokattu onnistuneesti!'));
         } else {
-            View::make('/kayttaja/muokkaa.html', array('virheet' => $virheet, 'kayttaja' => $kayttaja));
+            View::make('/kayttaja/muokkaa.html', array('virheet' => $virheet, 'kayttaja' => $muokattukayttaja));
         }
     }
     
-    public static function omatAanestykset($id){
+    public static function omatAanestykset(){
       $kayttaja = self::onKirjautunut();
-      $aanestykset = Kayttaja::omatAanestykset($id);
+      $aanestykset = Kayttaja::omatAanestykset($kayttaja->id);
       View::make('/kayttaja/omataanestykset.html', array('aanestykset' => $aanestykset,'kayttaja' => $kayttaja));
     }
     

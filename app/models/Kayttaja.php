@@ -10,7 +10,7 @@ class Kayttaja extends BaseModel{
     }
     
     public static function haeKaikki() {
-        $query = DB::connection()->prepare('SELECT nimi FROM kayttaja');
+        $query = DB::connection()->prepare('SELECT nimi FROM kayttaja ORDER BY kayttaja.nimi');
         
         $query->execute();
         $rivit = $query->fetchAll();
@@ -82,6 +82,9 @@ class Kayttaja extends BaseModel{
         $query = DB::connection()->prepare('DELETE FROM aanestaneet WHERE kayttaja_id = :id');
         $query->execute(array('id' => $id));
         
+        $query = DB::connection()->prepare('DELETE FROM ehdokas WHERE aanestys_id IN (SELECT id FROM aanestys WHERE luonut = :id)');
+        $query->execute(array('id' => $id));
+        
         $query = DB::connection()->prepare('DELETE FROM aanestys WHERE luonut = :id');
         $query->execute(array('id' => $id));
         
@@ -93,7 +96,7 @@ class Kayttaja extends BaseModel{
     
     public static function omatAanestykset($id) {
         
-        $query = DB::connection()->prepare('SELECT * FROM aanestys WHERE luonut = :id');
+        $query = DB::connection()->prepare('SELECT * FROM aanestys WHERE luonut = :id ORDER BY aanestys.paattyy ASC');
     
         $query->execute(array('id' => $id));
         
@@ -117,18 +120,20 @@ class Kayttaja extends BaseModel{
     }
     
     
+    
+    
     //VALIDAATIOT
     
     public function validoiNimi() {
         $nimi = $this->nimi;
-        $virheet = parent::validoi_string_pituus($nimi, 3, 'Nimen');
+        $virheet = parent::validoi_string_pituus($nimi, 3, 40, 'Nimen');
         
-        $query = DB::connection()->prepare('SELECT * FROM kayttaja WHERE nimi = :nimi LIMIT 1');
+        $query = DB::connection()->prepare('SELECT id, nimi FROM kayttaja WHERE nimi = :nimi LIMIT 1');
         
         $query->execute(array('nimi' => $nimi));
         $rivi = $query->fetch();
         
-        if ($rivi) {
+        if ($rivi['nimi'] == $nimi && $rivi['id'] != $this->id) {
             $virheet[] = 'Nimi on jo käytössä!';
         }
         
@@ -137,7 +142,7 @@ class Kayttaja extends BaseModel{
     
     public function validoiSalasana() {
         $salasana = $this->salasana;
-        $virheet = parent::validoi_string_pituus($salasana, 3, 'Salasanan');
+        $virheet = parent::validoi_string_pituus($salasana, 3, 30, 'Salasanan');
         return $virheet;
     }
     

@@ -1,8 +1,9 @@
 {% extends "base.html" %}
+{% import "makrot/lomakkeet.html" as lomakkeet %}
 {% block content %}
-  <h1>{{aanestys.nimi}}</h1>
+<h1 style="">{{aanestys.nimi}}</h1>
   
-  <p><i>{{viesti}}</i></p>
+  <p><i><font color="red"> {{viesti}}</font></i></p>
   
   <p>{{aanestys.kuvaus}}</p>
   {% if kayttaja.id == aanestys.luonut %}
@@ -36,7 +37,11 @@
         {% if not aanestys.kirjautuminen and date(aanestys.paattyy) >= date()%}
           <td><a href="{{base_path}}/aanestakirjautumatta/{{aanestys.id}}/{{ehdokas.id}}" class="btn btn-success">Äänestä</a></td>
         {% elseif kayttaja and aanestys.kirjautuminen and date(aanestys.paattyy) >= date() %}
-          <td><a href="{{base_path}}/aanestakirjautuneena/{{aanestys.id}}/{{ehdokas.id}}" class="btn btn-success">Äänestä</a></td>
+          {% if omaehdokas == ehdokas.id %}
+          <td><div class="btn btn-info">Äänestetty!</div></td>
+          {% else %}
+            <td><a href="{{base_path}}/aanestakirjautuneena/{{aanestys.id}}/{{ehdokas.id}}" class="btn btn-success">Äänestä</a></td>
+          {% endif %}
         {% endif %}
         {% if kayttaja.id == aanestys.luonut %}
         <td><a href="{{base_path}}/poistaehdokas/{{aanestys.id}}/{{ehdokas.id}}" class="btn btn-danger">Poista ehdokas</a></td>
@@ -59,5 +64,15 @@
       <button type="submit" class="btn btn-primary">Lisää ehdokas</button>
     </div>
   </form>
+  {% endif %}
+  
+  {% if virheet %}
+    <div class="alert alert-danger">
+      <ul>
+        {% for virhe in virheet %}
+          <li>{{virhe}}</li>
+        {% endfor %}
+      </ul>
+    </div>
   {% endif %}
 {% endblock %}

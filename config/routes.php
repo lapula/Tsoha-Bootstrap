@@ -20,19 +20,19 @@
       AanestyksetListausController::getTiedot($id);
   });
   
-  $routes->get('/muokkaa/:id', function($id) {
+  $routes->get('/muokkaa/:id', 'tarkistaKirjautuminen', function($id) {
       AanestyksetListausController::getMuokkaa($id);
   });
   
-  $routes->post('/muokkaa/:id', function($id) {
+  $routes->post('/muokkaa/:id', 'tarkistaKirjautuminen', function($id) {
       AanestyksetListausController::muokkaaAanestys($id);
   });
   
-  $routes->get('/poista/:id', function($id) {
+  $routes->get('/poista/:id', 'tarkistaKirjautuminen', function($id) {
       AanestyksetListausController::getPoista($id);
   });
   
-  $routes->post('/poista/:id', function($id) {
+  $routes->post('/poista/:id', 'tarkistaKirjautuminen', function($id) {
       AanestyksetListausController::poistaAanestys($id);
   });
   
@@ -40,7 +40,7 @@
       AanestyksetListausController::getLuo();
   });
   
-  $routes->post('/luo', function() {
+  $routes->post('/luo', 'tarkistaKirjautuminen', function() {
       AanestyksetListausController::luoAanestys();
   });
   
@@ -56,15 +56,15 @@
      KayttajaController::kirjaudu();
   });
   
-  $routes->get('/kayttaja/kirjauduUlos', function() {
+  $routes->get('/kayttaja/kirjauduUlos', 'tarkistaKirjautuminen', function() {
      KayttajaController::kirjauduUlos();
   });
   
-  $routes->get('/kayttaja/muokkaa/:id', function($id) {
-     KayttajaController::getMuokkaa($id);
+  $routes->get('/kayttaja/muokkaa', 'tarkistaKirjautuminen',  function() {
+     KayttajaController::getMuokkaa();
   });
   
-  $routes->post('/kayttaja/muokkaa/:id', function($id) {
+  $routes->post('/kayttaja/muokkaa/:id', 'tarkistaKirjautuminen',  function($id) {
      KayttajaController::muokkaa($id);
   });
   
@@ -76,19 +76,19 @@
     KayttajaController::luoUusikayttaja();
   });
   
-  $routes->get('/kayttaja/poista/:id', function($id) {
+  $routes->get('/kayttaja/poista/:id', 'tarkistaKirjautuminen',  function($id) {
     KayttajaController::poistaKayttaja($id);
   });
   
-  $routes->get('/kayttaja/omataanestykset/:id', function($id) {
-    KayttajaController::omatAanestykset($id);
+  $routes->get('/kayttaja/omataanestykset', 'tarkistaKirjautuminen',  function() {
+    KayttajaController::omatAanestykset();
   });
   
-  $routes->get('/poistaehdokas/:id/:ehdokas_id', function($id, $ehdokas_id) {
+  $routes->get('/poistaehdokas/:id/:ehdokas_id', 'tarkistaKirjautuminen',  function($id, $ehdokas_id) {
       EhdokasController::poistaEhdokas($id, $ehdokas_id);
   });
   
-  $routes->post('/tiedot/:id', function($id) {
+  $routes->post('/tiedot/:id', 'tarkistaKirjautuminen',  function($id) {
       EhdokasController::lisaaEhdokas($id);
   });
   
@@ -96,6 +96,10 @@
       EhdokasController::aanestaKirjautumatta($id, $ehdokas_id);
   });
   
-  $routes->get('/aanestakirjautuneena/:id/:ehdokas_id', function($id, $ehdokas_id) {
+  $routes->get('/aanestakirjautuneena/:id/:ehdokas_id', 'tarkistaKirjautuminen',  function($id, $ehdokas_id) {
       EhdokasController::aanestaKirjautuneena($id, $ehdokas_id);
+  });
+  
+  $routes->get('/kayttaja/aktiviteetti', 'tarkistaKirjautuminen', function() {
+      AanestaneetController::getAktiviteetti();
   });

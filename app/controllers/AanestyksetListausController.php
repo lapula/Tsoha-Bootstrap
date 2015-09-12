@@ -5,7 +5,7 @@ class AanestyksetListausController extends BaseController {
     
     public static function getKaikki() {
         $aanestykset = Aanestys::haeKaikki();
-        sort($aanestykset);
+        
         $kayttaja = self::onKirjautunut();
         View::make('kaikki.html', array('aanestykset' => $aanestykset, 'kayttaja' => $kayttaja));
     }
@@ -18,11 +18,24 @@ class AanestyksetListausController extends BaseController {
     public static function getTiedot($id) {
         $kayttaja = self::onKirjautunut();
         $aanestys = Aanestys::haeYksi($id);
-        View::make('tiedot.html', array('aanestys' => $aanestys, 'kayttaja' => $kayttaja));
+        if ($kayttaja) {
+            $aanestaneet = new Aanestaneet(array('kayttaja_id' => $kayttaja->id, 'aanestys_id' => $aanestys->id));
+            $omaehdokas = $aanestaneet->haeTiedot();
+        } else {
+            $omaehdokas = null;
+        }
+        
+        View::make('tiedot.html', array('aanestys' => $aanestys, 'kayttaja' => $kayttaja, 'omaehdokas' => $omaehdokas));
     }
     
     public static function getMuokkaa($id) {
         $kayttaja = self::onKirjautunut();
+        
+        if (!Aanestys::tarkistaOikeudet($id, $kayttaja->id)) {
+            $aanestykset = Aanestys::haeKaikki();
+            View::make('kaikki.html', array('aanestykset' => $aanestykset, 'kayttaja' => $kayttaja, 'viesti' => 'Yritit päästä käsiksi muiden tietoihin!'));
+        }
+        
         $aanestys = Aanestys::haeYksi($id);
         View::make('muokkaa.html', array('aanestys' => $aanestys, 'kayttaja' => $kayttaja));
     }
@@ -40,10 +53,10 @@ class AanestyksetListausController extends BaseController {
     }
     
     public static function luoAanestys() {
-        
+        $kayttaja = self::onKirjautunut();
         $params = $_POST;
         
-        $aanestys = new Aanestys(array(
+        $attributes = (array(
             'luonut' => $params['luonut'],
             'nimi' => $params['nimi'],
             'kuvaus' => $params['kuvaus'],
@@ -52,14 +65,22 @@ class AanestyksetListausController extends BaseController {
             'ehdokkaat' => null
         ));
         
-        $aanestys->tallenna();
+        $aanestys = new Aanestys($attributes);
+        $virheet = $aanestys->errors();
         
-        Redirect::to('/tiedot/' . $aanestys->id, array('viesti' => 'Äänestys luotu onnistuneesti!'));
+        if (count($virheet) == 0) {
+            $aanestys->tallenna();
+            Redirect::to('/tiedot/' . $aanestys->id, array('viesti' => 'Äänestys luotu onnistuneesti!'));
+        } else {
+            View::make('/luo.html', array('virheet' => $virheet, 'attributes' => $attributes, 'kayttaja' => $kayttaja));
+        }
+        
+        
         
     }
     
     public static function muokkaaAanestys($id) {
-        
+        $kayttaja = self::onKirjautunut();
         $params = $_POST;
         
         $attributes = array(
@@ -72,10 +93,18 @@ class AanestyksetListausController extends BaseController {
         );
         
         $aanestys = new Aanestys($attributes);
+        $virheet = $aanestys->errors();
         
-        $aanestys->paivita($id);
         
-        Redirect::to('/tiedot/' . $id, array('viesti' => 'Muokattu onnistuneesti!'));
+        
+        if (count($virheet) == 0) {
+            $aanestys->paivita($id);
+            Redirect::to('/tiedot/' . $id, array('viesti' => 'Muokattu onnistuneesti!'));
+        } else {
+            View::make('/muokkaa.html', array('virheet' => $virheet, 'kayttaja' => $kayttaja, 'aanestys' => $aanestys));
+        }
+        
+        
         
     }
     

@@ -44,8 +44,9 @@
           </ul>
           <ul class="nav navbar-nav navbar-right">
             {% if kayttaja %}
-              <li><a href="{{base_path}}/kayttaja/omataanestykset/{{kayttaja.id}}">Omat äänestykset</a></li>
-              <li><a href="{{base_path}}/kayttaja/muokkaa/{{kayttaja.id}}">Hallinnoi tiliäsi</a></li>
+              <li><a href="{{base_path}}/kayttaja/aktiviteetti">Aktiviteetti</a></li>
+              <li><a href="{{base_path}}/kayttaja/omataanestykset">Omat äänestykset</a></li>
+              <li><a href="{{base_path}}/kayttaja/muokkaa">Hallinnoi tiliäsi</a></li>
               <li><a href="{{base_path}}/kayttaja/kirjauduUlos">Kirjaudu ulos</a></li>
             {% else %}
               <li><a href="{{base_path}}/kayttaja/kirjaudu">Kirjaudu sisään</a></li>
