@@ -37,7 +37,7 @@ class EhdokasController extends BaseController {
         
         $ehdokas = new Ehdokkaat(array('id' => $ehdokas_id));
         
-        if ($ehdokas->tarkistaAanestysKirjautumatta($id)) {
+        if ($ehdokas->tarkistaAanestysKirjautumatta($id) && $ehdokas->tarkistaAanestysVoimassa($id)) {
             $ehdokas->aanestaKirjautumatta($ehdokas_id);
             Redirect::to('/tiedot/' . $id, array('viesti' => 'Äänestit ehdokasta!'));
         } else {
@@ -48,7 +48,11 @@ class EhdokasController extends BaseController {
     
     public static function aanestaKirjautuneena($aanestys_id, $ehdokas_id) {
         $kayttaja = self::onKirjautunut();
-        $ehdokas = new Ehdokkaat(array('kayttaja_id' => $kayttaja->id,'aanestys_id' => $aanestys_id, 'ehdokas_id' => $ehdokas_id));
+        $ehdokas = new Ehdokkaat(array('id' => $ehdokas_id,'aanestys_id' => $aanestys_id));
+        
+        if (!$ehdokas->tarkistaAanestysVoimassa($aanestys_id)) {
+            Redirect::to('/tiedot/' . $aanestys_id, array('viesti' => 'Yritit huijata!'));
+        }
         
         $onnistui = $ehdokas->aanestaKirjautuneena($kayttaja->id, $aanestys_id, $ehdokas_id);
         

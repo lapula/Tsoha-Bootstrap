@@ -70,6 +70,17 @@ class Ehdokkaat extends BaseModel {
         }
     }
     
+    public function tarkistaAanestysVoimassa($id) {
+        $query = DB::connection()->prepare('SELECT aanestys.paattyy FROM aanestys where id = :id');
+        $query->execute(array('id' => $id));
+        $rivi = $query->fetch();
+        if (strtotime(date('d.m.y')) > strtotime($rivi[0])) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+    
     public function aanestaKirjautuneena($kayttaja_id, $aanestys_id, $ehdokas_id) {
         
         $query = DB::connection()->prepare('SELECT * FROM aanestaneet WHERE kayttaja_id = :kayttaja_id AND aanestys_id = :aanestys_id AND ehdokas_id = :ehdokas_id LIMIT 1');
